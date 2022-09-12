@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:05:12 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/12 14:41:20 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/12 15:37:50 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ struct s_info
 	int				nr_times_to_eat;
 	int				nr_fully_fed_philo;
 	bool			done;
-	pthread_mutex_t	done_lock;
+	pthread_mutex_t	info_lock;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	write_lock;
 };
@@ -63,8 +63,9 @@ long	parse_arg_to_long(char *argv, long max);
 bool	parse_input_to_info(int argc, char **argv, t_info *info);
 bool	init_philos(t_info *info);
 bool	init_forks(t_info *info);
+bool	init_info_mutexes(t_info *info);
 
-void	destroy_mutex_array(pthread_mutex_t *mutexes, int n);
+void	destroy_forks(t_info *info, int n);
 void	free_info_contents(t_info *info);
 
 void	*philosopher(void *data);

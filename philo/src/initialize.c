@@ -6,12 +6,23 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 10:14:53 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/12 14:30:16 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/12 15:33:17 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../include/philo.h"
 
+bool	init_info_mutexes(t_info *info)
+{
+	if (pthread_mutex_init(&info->info_lock, 0) != 0)
+		return (false);
+	if (pthread_mutex_init(&info->write_lock, 0))
+	{
+		pthread_mutex_destroy(&info->info_lock);
+		return (false);
+	}
+	return (true);
+}
 
 bool	init_forks(t_info *info)
 {
@@ -24,10 +35,7 @@ bool	init_forks(t_info *info)
 	while (i < info->nr_philos)
 	{
 		if(pthread_mutex_init(&info->forks[i], 0) != 0)
-		{
-			destroy_mutex_array(info->forks, i);
 			return (false);
-		}
 		i++;
 	}
 	return (true);
