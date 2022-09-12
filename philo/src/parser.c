@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 15:10:52 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/12 10:20:06 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/12 14:31:05 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ long	parse_arg_to_long(char *argv, long max)
 	return (count);
 }
 
-t_bool	parse_input_to_info(int argc, char **argv, t_info *info)
+bool	parse_input_to_info(int argc, char **argv, t_info *info)
 {
 	if (!info)
-		return (FALSE);
+		return (false);
 	info->nr_philos = parse_arg_to_long(argv[1], INT_MAX);
 	info->time_to_die = parse_arg_to_long(argv[2], LONG_MAX);
 	info->time_to_eat = parse_arg_to_long(argv[3], LONG_MAX);
@@ -45,6 +45,6 @@ t_bool	parse_input_to_info(int argc, char **argv, t_info *info)
 		info->nr_times_to_eat = parse_arg_to_long(argv[5], INT_MAX);
 	if (info->nr_philos < 0 || info->time_to_die < 0 || info->time_to_eat < 0
 		|| info->time_to_sleep < 0 || info->nr_times_to_eat < 0)
-		return (FALSE);
-	return (TRUE);
+		return (false);
+	return (true);
 }

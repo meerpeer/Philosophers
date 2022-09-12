@@ -6,28 +6,31 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 10:14:53 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/12 11:04:27 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/12 14:30:16 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../include/philo.h"
 
 
-t_bool	init_forks(t_info *info)
+bool	init_forks(t_info *info)
 {
 	int	i;
 
 	info->forks = malloc(sizeof(pthread_mutex_t) * info->nr_philos);
 	if (!info->forks)
-		return (FALSE);
+		return (false);
 	i = 0;
 	while (i < info->nr_philos)
 	{
 		if(pthread_mutex_init(&info->forks[i], 0) != 0)
-			return (FALSE);
+		{
+			destroy_mutex_array(info->forks, i);
+			return (false);
+		}
 		i++;
 	}
-	return (TRUE);
+	return (true);
 }
 
 static void	set_philo_fork_ids(t_philo *philo)
@@ -43,13 +46,13 @@ static void	set_philo_fork_ids(t_philo *philo)
 	philo->fork_id2 = right;
 }
 
-t_bool	init_philos(t_info *info)
+bool	init_philos(t_info *info)
 {
 	int	i;
 
 	info->philos = malloc(sizeof(*info->philos) * info->nr_philos);
 	if(!info->philos)
-		return (FALSE);
+		return (false);
 	i = 0;
 	while (i <= info->nr_philos)
 	{
@@ -60,5 +63,5 @@ t_bool	init_philos(t_info *info)
 		set_philo_fork_ids(&info->philos[i]);
 		i++;
 	}
-	return (TRUE);
+	return (true);
 }
