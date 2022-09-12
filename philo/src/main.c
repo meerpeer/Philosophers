@@ -6,17 +6,17 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/12 15:40:19 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/12 16:03:52 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
 /**
-	@brief A function to stop everything and to clean up, it should: \n
-		Destroy all mutexes (fork / write/ master checker) \n
-		Free philosophers and forks (check if more is malloced) \n
-		Wait for all existing threads to close with pthread join \n
+	@brief A function to stop everything and to clean up, it should: 
+		Destroy all mutexes (forks / write/ info) 
+		Free philosophers and forks (check if more is malloced) 
+		Wait for all existing threads to close with pthread join 
 		@param info info data struct
 		@param i_threads amount of threads created
 */
@@ -63,25 +63,8 @@ void	loop(t_info *info)
 			}
 			i++;
 		}
-		usleep(1000);
+		usleep(250);
 	}
-}
-
-
-bool	create_philo_threads(t_info *info)
-{
-	int	i;
-
-	i = 0;
-	while (i < info->nr_philos)
-	{
-		pthread_create(&info->philos[i].thread, NULL,
-			philosopher, &info->philos[i]);
-		i++;
-	}
-	if (i == info->nr_philos)
-		return (true);
-	return (false);
 }
 
 /*
