@@ -6,7 +6,7 @@ CC = gcc
 
 HEADERFILES = include/philo.h
 
-SRC_FILES = main.c parser.c\
+SRC_FILES = main.c parser.c initialize.c\
 
 OBJ_FILES = $(SRC_FILES:.c=.o)
 OBJS = $(addprefix obj/, $(OBJ_FILES))

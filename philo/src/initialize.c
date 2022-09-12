@@ -1,0 +1,64 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   initialize.c                                       :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/09/12 10:14:53 by mevan-de      #+#    #+#                 */
+/*   Updated: 2022/09/12 11:04:27 by mevan-de      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
+# include "../include/philo.h"
+
+
+t_bool	init_forks(t_info *info)
+{
+	int	i;
+
+	info->forks = malloc(sizeof(pthread_mutex_t) * info->nr_philos);
+	if (!info->forks)
+		return (FALSE);
+	i = 0;
+	while (i < info->nr_philos)
+	{
+		if(pthread_mutex_init(&info->forks[i], 0) != 0)
+			return (FALSE);
+		i++;
+	}
+	return (TRUE);
+}
+
+static void	set_philo_fork_ids(t_philo *philo)
+{
+	int	left;
+	int	right;
+
+	left = philo->index - 1;
+	right = philo->index;
+	if (right >= philo->info->nr_philos)
+		right = 0;
+	philo->fork_id1 = left;
+	philo->fork_id2 = right;
+}
+
+t_bool	init_philos(t_info *info)
+{
+	int	i;
+
+	info->philos = malloc(sizeof(*info->philos) * info->nr_philos);
+	if(!info->philos)
+		return (FALSE);
+	i = 0;
+	while (i <= info->nr_philos)
+	{
+		info->philos[i].info = info;
+		info->philos[i].index = i + 1;
+		info->philos[i].nr_of_eats = 0;
+		info->philos[i].time_to_death = info->time_to_die;
+		set_philo_fork_ids(&info->philos[i]);
+		i++;
+	}
+	return (TRUE);
+}
