@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:05:12 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/12 15:37:50 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/13 12:15:06 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <stdbool.h>
- #include <unistd.h>
+#include <unistd.h>
+#include <sys/time.h>
 
 typedef struct s_philo	t_philo;
 typedef struct s_info	t_info;
@@ -30,7 +31,7 @@ typedef enum e_action
 	SLEEP,
 	THINK,
 	DIE,
-}			t_direction;
+}			t_action;
 
 struct s_philo
 {
@@ -53,6 +54,8 @@ struct s_info
 	long			time_to_sleep;
 	int				nr_times_to_eat;
 	int				nr_fully_fed_philo;
+	int				start_time;
+	int				current_time;
 	bool			done;
 	pthread_mutex_t	info_lock;
 	pthread_mutex_t	*forks;
@@ -67,6 +70,9 @@ bool	init_info_mutexes(t_info *info);
 
 void	destroy_forks(t_info *info, int n);
 void	free_info_contents(t_info *info);
+
+int		get_time_in_ms(void);
+void	set_current_time(t_info *info);
 
 void	*philosopher(void *data);
 

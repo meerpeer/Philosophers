@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/12 16:03:52 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/13 12:15:21 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,27 +42,31 @@ void	loop(t_info *info)
 	int	i;
 	int	nr_full_philos;
 
-	while (!info->done)
+	while (true)
 	{
 		i = 0;
 		nr_full_philos = 0;
+		pthread_mutex_lock(&info->info_lock);
 		while (i < info->nr_philos)
 		{
+			set_current_time(info);
 			if(info->nr_times_to_eat > 0
 				&& info->philos->nr_of_eats >= info->nr_times_to_eat)
 				nr_full_philos++;
 			if (nr_full_philos == info->nr_philos)
 			{
-				//write message that everyone is full??
 				info->done = true;
+				return ;
 			}
 			else if(info->philos[i].time_to_death < info->time_to_eat)
 			{
 				//write a message that this boy has died
 				info->done = true;
+				return ;
 			}
 			i++;
 		}
+		pthread_mutex_unlock(&info->info_lock);
 		usleep(250);
 	}
 }
@@ -97,6 +101,7 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	info.nr_fully_fed_philo = 0;
 	info.done = false;
+	info.start_time = get_time_in_ms();
 	if (!init_forks(&info))
 		return (EXIT_FAILURE);
 	if (!init_philos(&info))
