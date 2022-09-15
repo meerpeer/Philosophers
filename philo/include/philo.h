@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:05:12 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/15 11:44:12 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/15 13:24:35 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,8 @@ struct s_info
 
 long	parse_arg_to_long(char *argv, long max);
 bool	parse_input_to_info(int argc, char **argv, t_info *info);
-bool	initialize(t_info *info);
-// bool	init_philos(t_info *info);
-// bool	init_forks(t_info *info);
-// bool	init_info_mutexes(t_info *info);
+bool	initialize_mutexes(t_info *info);
+bool	init_philos(t_info *info);
 
 void	free_info_contents(t_info *info);
 bool	destroy_mutexes(t_info *info, int fork_mutexes, int philo_mutexes,

@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 10:14:53 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/15 13:14:43 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/15 13:27:39 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,33 @@ static void	set_philo_fork_ids(t_philo *philo)
 	philo->fork_id2 = right;
 }
 
-int	init_philos(t_info *info)
+bool	init_philos(t_info *info)
 {
 	int	i;
 
 	info->philos = malloc(sizeof(*info->philos) * info->nr_philos);
 	if (!info->philos)
-		return (0);
+		return (false);
 	i = 0;
 	while (i <= info->nr_philos)
 	{
 		info->philos[i].info = info;
 		info->philos[i].index = i + 1;
 		info->philos[i].nr_of_eats = 0;
-		info->philos[i].time_to_death = info->time_to_die;
+		info->philos[i].time_to_death = info->time_to_die + info->start_time;
 		set_philo_fork_ids(&info->philos[i]);
+		i++;
+	}
+	return (true);
+}
+
+int	init_philos_mutexes(t_info	*info)
+{
+	int	i;
+
+	i = 0;
+	while (i <= info->nr_philos)
+	{
 		if (pthread_mutex_init(&info->philos[i].philo_lock, 0) != 0)
 			return (i);
 		i++;
@@ -64,7 +76,7 @@ int	init_philos(t_info *info)
 	return (i);
 }
 
-bool	initialize(t_info *info)
+bool	initialize_mutexes(t_info *info)
 {
 	int		nr_forks;
 	int		nr_philo_locks;
@@ -80,7 +92,7 @@ bool	initialize(t_info *info)
 		completed = false;
 	else
 	{
-		nr_philo_locks = init_philos(info);
+		nr_philo_locks = init_philos_mutexes(info);
 		if (nr_philo_locks < info->nr_philos)
 			completed = false;
 		if (pthread_mutex_init(&info->info_lock, 0) != 0)

@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/15 13:14:23 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/15 13:26:43 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	start(t_info *info)
 	{
 		pthread_create(&info->philos[i].thread, NULL,
 			philosopher, &info->philos[i]);
+		printf("philo index = %i\n", info->philos[i].index);
 		i++;
 	}
 	if (i == info->nr_philos)
@@ -100,7 +101,9 @@ int	main(int argc, char **argv)
 	info.nr_fully_fed_philo = 0;
 	info.done = false;
 	info.start_time = get_time_in_ms();
-	if (!initialize(&info))
+	if (!init_philos(&info))
+		return (EXIT_FAILURE);
+	if (!initialize_mutexes(&info))
 		return (EXIT_FAILURE);
 	start(&info);
 	return (0);
