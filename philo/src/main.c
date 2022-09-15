@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/13 12:15:21 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/15 13:14:23 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,7 @@ void	stop(t_info *info, int i_threads)
 		i_threads--;
 		pthread_join(info->philos[i_threads].thread, NULL);
 	}
-	destroy_forks(info, info->nr_philos);
-	pthread_mutex_destroy(&info->info_lock);
-	pthread_mutex_destroy(&info->write_lock);
+	destroy_mutexes(info, info->nr_philos, info->nr_philos, true);
 	free_info_contents(info);
 }
 
@@ -60,8 +58,8 @@ void	loop(t_info *info)
 			}
 			else if(info->philos[i].time_to_death < info->time_to_eat)
 			{
-				//write a message that this boy has died
 				info->done = true;
+				write_message(info->current_time, DIE, info->philos[i].index);
 				return ;
 			}
 			i++;
@@ -102,14 +100,8 @@ int	main(int argc, char **argv)
 	info.nr_fully_fed_philo = 0;
 	info.done = false;
 	info.start_time = get_time_in_ms();
-	if (!init_forks(&info))
+	if (!initialize(&info))
 		return (EXIT_FAILURE);
-	if (!init_philos(&info))
-		return (destroy_forks(&info, info.nr_philos),
-			EXIT_FAILURE);
-	if (!init_info_mutexes(&info))
-		return (destroy_forks(&info, info.nr_philos),
-			EXIT_FAILURE);
 	start(&info);
 	return (0);
 }
