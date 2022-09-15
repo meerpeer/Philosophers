@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/15 13:26:43 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/15 13:37:58 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,11 @@ void	loop(t_info *info)
 		i = 0;
 		nr_full_philos = 0;
 		pthread_mutex_lock(&info->info_lock);
+		set_current_time(info);
+		if (info->current_time % 1000 == 0)
+			printf("current time = %i\n", info->current_time);
 		while (i < info->nr_philos)
 		{
-			set_current_time(info);
 			if(info->nr_times_to_eat > 0
 				&& info->philos->nr_of_eats >= info->nr_times_to_eat)
 				nr_full_philos++;
@@ -78,11 +80,12 @@ void	start(t_info *info)
 	int	i;
 
 	i = 0;
+	set_current_time(info);
 	while (i < info->nr_philos)
 	{
 		pthread_create(&info->philos[i].thread, NULL,
 			philosopher, &info->philos[i]);
-		printf("philo index = %i\n", info->philos[i].index);
+		printf("philo time to death = %li\n", info->philos[i].time_to_death);
 		i++;
 	}
 	if (i == info->nr_philos)
