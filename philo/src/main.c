@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/15 15:20:46 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/15 15:34:32 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,9 @@ void	loop(t_info *info)
 		i = 0;
 		nr_full_philos = 0;
 		pthread_mutex_lock(&info->info_lock);
-		// if (get_elapsed_time(info) % 1000)
-		// 	printf("elapsed time = %li\n", get_elapsed_time(info));
-		while (i < info->nr_philos)
+		while (i < info->nr_philos && !info->done)
 		{
+			// maybe move the counting to when they eat for norminette sake
 			if(info->nr_times_to_eat > 0
 				&& info->philos->nr_of_eats >= info->nr_times_to_eat)
 				nr_full_philos++;
@@ -60,8 +59,6 @@ void	loop(t_info *info)
 				info->done = true;
 				write_message(get_elapsed_time(info), DIE, info->philos[i].index);
 				done = true;
-				pthread_mutex_unlock(&info->info_lock);
-				break ;
 			}
 			i++;
 		}
