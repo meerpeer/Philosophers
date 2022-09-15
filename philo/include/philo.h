@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:05:12 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/15 13:24:35 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/15 14:36:58 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,14 @@ typedef enum e_action
 
 struct s_philo
 {
-	t_info				*info;
-	pthread_t			thread;
-	pthread_mutex_t		philo_lock;
-	int					index;
-	long				time_to_death;
-	int					nr_of_eats;
-	int					fork_id1;
-	int					fork_id2;
+	t_info			*info;
+	pthread_t		thread;
+	pthread_mutex_t	philo_lock;
+	int				index;
+	long			time_last_meal;
+	int				nr_of_eats;
+	int				fork_id1;
+	int				fork_id2;
 };
 
 struct s_info
@@ -54,8 +54,8 @@ struct s_info
 	long			time_to_sleep;
 	int				nr_times_to_eat;
 	int				nr_fully_fed_philo;
-	int				start_time;
-	int				current_time;
+	long				start_time;
+	//int				current_time;
 	bool			done;
 	pthread_mutex_t	info_lock;
 	pthread_mutex_t	*forks;
@@ -70,8 +70,8 @@ void	free_info_contents(t_info *info);
 bool	destroy_mutexes(t_info *info, int fork_mutexes, int philo_mutexes,
 	bool info_lock_created);
 
-int		get_time_in_ms(void);
-void	set_current_time(t_info *info);
+long	get_time_in_ms(void);
+long	get_elapsed_time(t_info *info);
 void	write_message(int current_time, t_action action, int index);
 
 void	*philosopher(void *data);

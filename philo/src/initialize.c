@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 10:14:53 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/15 13:33:23 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/15 15:17:42 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ bool	init_philos(t_info *info)
 		info->philos[i].info = info;
 		info->philos[i].index = i + 1;
 		info->philos[i].nr_of_eats = 0;
-		info->philos[i].time_to_death = info->time_to_die;
+		info->philos[i].time_last_meal = 0;
 		set_philo_fork_ids(&info->philos[i]);
 		i++;
 	}

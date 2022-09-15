@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/15 13:37:58 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/15 15:20:46 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,34 +37,38 @@ void	stop(t_info *info, int i_threads)
 */
 void	loop(t_info *info)
 {
-	int	i;
-	int	nr_full_philos;
+	int		i;
+	int		nr_full_philos;
+	bool	done;
 
-	while (true)
+	done = false;
+	while (!done)
 	{
 		i = 0;
 		nr_full_philos = 0;
 		pthread_mutex_lock(&info->info_lock);
-		set_current_time(info);
-		if (info->current_time % 1000 == 0)
-			printf("current time = %i\n", info->current_time);
+		// if (get_elapsed_time(info) % 1000)
+		// 	printf("elapsed time = %li\n", get_elapsed_time(info));
 		while (i < info->nr_philos)
 		{
 			if(info->nr_times_to_eat > 0
 				&& info->philos->nr_of_eats >= info->nr_times_to_eat)
 				nr_full_philos++;
-			if (nr_full_philos == info->nr_philos)
+			if(get_elapsed_time(info)
+				>= (info->philos[i].time_last_meal + info->time_to_die))
 			{
 				info->done = true;
-				return ;
-			}
-			else if(info->philos[i].time_to_death < info->time_to_eat)
-			{
-				info->done = true;
-				write_message(info->current_time, DIE, info->philos[i].index);
-				return ;
+				write_message(get_elapsed_time(info), DIE, info->philos[i].index);
+				done = true;
+				pthread_mutex_unlock(&info->info_lock);
+				break ;
 			}
 			i++;
+		}
+		if (nr_full_philos == info->nr_philos)
+		{
+			info->done = true;
+			done = true;
 		}
 		pthread_mutex_unlock(&info->info_lock);
 		usleep(250);
@@ -80,12 +84,11 @@ void	start(t_info *info)
 	int	i;
 
 	i = 0;
-	set_current_time(info);
 	while (i < info->nr_philos)
 	{
 		pthread_create(&info->philos[i].thread, NULL,
 			philosopher, &info->philos[i]);
-		printf("philo time to death = %li\n", info->philos[i].time_to_death);
+		//printf("philo time to death = %li\n", info->philos[i].time_to_death);
 		i++;
 	}
 	if (i == info->nr_philos)
