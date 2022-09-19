@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/19 13:51:52 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/19 14:27:21 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/19 14:59:49 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,12 @@ bool	philo_eat(t_philo *philo)
 	bool	success;
 
 	take_forks(philo);
+	pthread_mutex_lock(&philo->philo_lock);
+	philo->time_last_meal = get_elapsed_time(philo->info);
+	pthread_mutex_unlock(&philo->philo_lock);
 	success = wait_action(philo, EAT, philo->info->time_to_eat);
 	drop_forks(philo, true, true);
 	pthread_mutex_lock(&philo->philo_lock);
-	philo->time_last_meal = get_elapsed_time(philo->info);
 	if (success)
 		philo->nr_of_eats++;
 	if (philo->nr_of_eats == philo->info->nr_times_to_eat)
