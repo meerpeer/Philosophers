@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 11:20:16 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/19 11:54:23 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/19 13:36:44 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,13 @@ void	take_forks(t_philo *philo)
 	}
 }
 
-//wait (sleep or think)
-bool	wait_action(t_philo *philo, t_action ACTION)
+void	drop_forks(t_philo *philo)
+{
+	pthread_mutex_unlock(&philo->info->forks[philo->fork_left]);
+	pthread_mutex_unlock(&philo->info->forks[philo->fork_right]);
+}
+
+bool	wait_action(t_philo *philo, t_action ACTION, long wait_time)
 {
 	long	wait_start;
 	long	wait_end;
@@ -45,15 +50,7 @@ bool	wait_action(t_philo *philo, t_action ACTION)
 	wait_start = get_elapsed_time(philo->info);
 	if (is_done(philo->info))
 		return (false);
-	wait_end = wait_start + philo->info->time_to_sleep;
-	if (ACTION == THINK)
-	{
-		pthread_mutex_lock(&philo->philo_lock);
-		wait_end = (philo->info->time_to_die
-				- (wait_start - philo->time_last_meal)
-				- philo->info->time_to_eat) / 2;
-		pthread_mutex_unlock(&philo->philo_lock);
-	}
+	wait_end = wait_start + wait_time;
 	write_message(get_elapsed_time(philo->info), ACTION, philo->index);
 	while (true)
 	{
@@ -65,19 +62,72 @@ bool	wait_action(t_philo *philo, t_action ACTION)
 	}
 }
 
+bool	philo_think(t_philo *philo)
+{
+	long	time_to_think;
+	long	wait_start;
+	long	time_last_meal;
+
+	wait_start = get_elapsed_time(philo->info);
+	pthread_mutex_lock(&philo->philo_lock);
+	time_last_meal = philo->time_last_meal;
+	pthread_mutex_unlock(&philo->philo_lock);
+	time_to_think = (philo->info->time_to_die
+				- (wait_start - time_last_meal)
+				- philo->info->time_to_eat)
+				/ 2;
+	if (!wait_action(philo, THINK, time_to_think))
+		return (false);
+	return (true);
+}
+
+bool	philo_sleep(t_philo *philo)
+{
+	if(!wait_action(philo, SLEEP, philo->info->time_to_sleep))
+		return (false);
+	return (true);
+}
+
+bool	philo_eat(t_philo *philo)
+{
+	bool	success;
+
+	take_forks(philo);
+	success = wait_action(philo, EAT, philo->info->time_to_eat);
+	drop_forks(philo);
+	pthread_mutex_lock(&philo->philo_lock);
+	philo->time_last_meal = get_elapsed_time(philo->info);
+	philo->nr_of_eats++;
+	if (philo->nr_of_eats == philo->info->nr_times_to_eat)
+	{
+		pthread_mutex_lock(&philo->info->info_lock);
+		philo->info->nr_fully_fed_philo++;
+		pthread_mutex_unlock(&philo->info->info_lock);
+	}
+	pthread_mutex_unlock(&philo->philo_lock);
+	return (success);
+}
+
 void	*philosopher(void *data)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
 	if (philo->index % 2 == 1)
-		wait_action(philo, THINK);
+	{
+		if(!philo_think(philo))
+			return (NULL);
+	}
 	while (true)
 	{
 		if (is_done(philo->info))
 			return (NULL);
-		usleep (250);
+		if(!philo_eat(philo))
+			return (NULL);
+		if(!philo_sleep(philo))
+			return (NULL);
+		if(!philo_think(philo))
+			return (NULL); 
 	}
-	(void) data;
 	return (NULL);
 }
