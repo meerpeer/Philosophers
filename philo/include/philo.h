@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:05:12 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/19 11:40:25 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/19 14:15:24 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <stdbool.h>
-#include <unistd.h>
-#include <sys/time.h>
+# include <unistd.h>
+# include <sys/time.h>
 
 typedef struct s_philo	t_philo;
 typedef struct s_info	t_info;
@@ -54,8 +54,7 @@ struct s_info
 	long			time_to_sleep;
 	int				nr_times_to_eat;
 	int				nr_fully_fed_philo;
-	long				start_time;
-	//int				current_time;
+	long			start_time;
 	bool			done;
 	pthread_mutex_t	info_lock;
 	pthread_mutex_t	*forks;
@@ -68,12 +67,17 @@ bool	init_philos(t_info *info);
 
 void	free_info_contents(t_info *info);
 bool	destroy_mutexes(t_info *info, int fork_mutexes, int philo_mutexes,
-	bool info_lock_created);
+			bool info_lock_created);
 
 long	get_time_in_ms(void);
 long	get_elapsed_time(t_info *info);
 void	write_message(int current_time, t_action action, int index);
 
 void	*philosopher(void *data);
+bool	philo_eat(t_philo *philo);
+bool	philo_sleep(t_philo *philo);
+bool	philo_think(t_philo *philo);
+bool	wait_action(t_philo *philo, t_action ACTION, long wait_time);
+bool	is_done(t_info *info);
 
 #endif

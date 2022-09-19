@@ -6,11 +6,11 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 11:45:05 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/19 11:54:06 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/19 14:13:41 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../include/philo.h"
+#include "../include/philo.h"
 
 void	write_message(int current_time, t_action action, int index)
 {

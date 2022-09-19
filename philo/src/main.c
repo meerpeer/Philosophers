@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/19 13:36:03 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/19 14:13:18 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ bool	has_one_died(t_info *info)
 	i = 0;
 	while (i < info->nr_philos && !info->done)
 	{
-		if(get_elapsed_time(info)
+		if (get_elapsed_time(info)
 			>= (info->philos[i].time_last_meal + info->time_to_die))
 		{
 			info->done = true;
@@ -56,19 +56,19 @@ bool	has_one_died(t_info *info)
 */
 void	loop(t_info *info)
 {
-	int		i;
 	bool	done;
 
 	done = false;
 	while (!done)
 	{
-		i = 0;
 		pthread_mutex_lock(&info->info_lock);
-
-		if (info->nr_fully_fed_philo == info->nr_philos)
-		{
-			info->done = true;
+		if (info->done)
 			done = true;
+		else
+		{
+			done = has_one_died(info);
+			if (done)
+				info->done = true;
 		}
 		pthread_mutex_unlock(&info->info_lock);
 		usleep(250);
