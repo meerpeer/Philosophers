@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:05:12 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/15 14:36:58 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/19 11:40:25 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ struct s_philo
 	int				index;
 	long			time_last_meal;
 	int				nr_of_eats;
-	int				fork_id1;
-	int				fork_id2;
+	int				fork_left;
+	int				fork_right;
 };
 
 struct s_info
