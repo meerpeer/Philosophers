@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 11:20:16 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/19 14:14:14 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/19 14:24:03 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,30 @@ bool	wait_action(t_philo *philo, t_action ACTION, long wait_time)
 	}
 }
 
+void	single_philo(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->info->forks[philo->fork_left]);
+	if (!is_done(philo->info))
+		write_message(get_elapsed_time(philo->info), TAKE_FORK, 1);
+	while (true)
+	{
+		if (is_done(philo->info))
+		{
+			pthread_mutex_unlock(&philo->info->forks[philo->fork_left]);
+			return ;
+		}
+		usleep (250);
+	}
+}
+
 void	*philosopher(void *data)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
-	if (philo->index % 2 == 1)
+	if (philo->info->nr_philos == 1)
+		return (single_philo(philo), NULL);
+	else if (philo->index % 2 == 1)
 	{
 		if (!philo_think(philo))
 			return (NULL);

@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/19 13:51:52 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/19 14:12:23 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/19 14:27:21 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ bool	philo_think(t_philo *philo)
 	time_to_think = (philo->info->time_to_die
 			- (wait_start - time_last_meal)
 			- philo->info->time_to_eat) / 2;
+	if (time_to_think > 1000)
+		time_to_think = 1000;
 	if (!wait_action(philo, THINK, time_to_think))
 		return (false);
 	return (true);
