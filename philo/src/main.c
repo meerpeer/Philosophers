@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/19 14:13:18 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/19 14:53:36 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 */
 void	stop(t_info *info, int i_threads)
 {
-	while (i_threads > 0)
+	while (i_threads >= 0)
 	{
 		i_threads--;
 		pthread_join(info->philos[i_threads].thread, NULL);

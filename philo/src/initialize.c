@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 10:14:53 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/19 11:14:39 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/19 14:54:09 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ bool	init_philos(t_info *info)
 {
 	int	i;
 
-	info->philos = malloc(sizeof(*info->philos) * info->nr_philos);
+	info->philos = malloc(sizeof(*info->philos) * (info->nr_philos + 1));
 	if (!info->philos)
 		return (false);
 	i = 0;
