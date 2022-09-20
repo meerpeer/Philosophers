@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/20 14:40:32 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/20 15:33:09 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	stop(t_info *info, int i_threads)
 	while (i_threads > 0)
 	{
 		i_threads--;
+		printf("index = %i\n" , i_threads);
 		if (pthread_join(info->philo_threads[i_threads], NULL) != 0)
 			return ;
 	}
@@ -61,7 +62,7 @@ void	loop(t_info *info)
 {
 	bool	done;
 
-	done = false;
+	done = has_one_died(info);
 	while (!done)
 	{
 		pthread_mutex_lock(&info->info_lock);
@@ -97,12 +98,9 @@ void	start(t_info *info)
 	}
 	if (i == info->nr_philos)
 		loop(info);
-	else
-	{
-		pthread_mutex_lock(&info->info_lock);
-		info->done = true;
-		pthread_mutex_unlock(&info->info_lock);
-	}
+	pthread_mutex_lock(&info->info_lock);
+	info->done = true;
+	pthread_mutex_unlock(&info->info_lock);
 	stop(info, i);
 }
 
@@ -116,7 +114,7 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	info.nr_fully_fed_philo = 0;
 	info.done = false;
-	info.start_delay = 1000;
+	info.start_delay = 200;
 	info.start_time = get_time_in_ms() + info.start_delay;
 	if (!init_philos(&info))
 		return (EXIT_FAILURE);

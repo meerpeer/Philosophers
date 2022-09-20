@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 11:20:16 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/20 14:41:25 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/20 15:29:07 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ bool	wait_action(t_philo *philo, t_action ACTION, long wait_time)
 void	single_philo(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->info->forks[philo->fork_left]);
-	if (!is_done(philo->info))
+	if (!is_done(philo->info) && philo->info->time_to_die != 0)
 		write_message(get_elapsed_time(philo->info), TAKE_FORK, 1);
 	while (true)
 	{
@@ -75,13 +75,13 @@ void	*philosopher(void *data)
 	while (true)
 	{
 		if (is_done(philo->info))
-			return (NULL);
+			break;
 		if (!philo_eat(philo))
-			return (NULL);
+			break;
 		if (!philo_sleep(philo))
-			return (NULL);
+			break;
 		if (!philo_think(philo))
-			return (NULL);
+			break;
 	}
 	return (NULL);
 }
