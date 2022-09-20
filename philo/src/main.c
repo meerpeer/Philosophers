@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/20 14:26:46 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/20 14:40:32 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,15 +87,11 @@ void	start(t_info *info)
 	int	i;
 
 	i = 0;
-	
 	info->philo_threads = malloc(sizeof(pthread_mutex_t) * info->nr_philos);
 	while (i < info->nr_philos)
 	{
-		//remove this
-		// if (i==13)
-		// 	break ;
-		if(pthread_create(&info->philo_threads[i], NULL,
-			philosopher, &info->philos[i]) != 0)
+		if (pthread_create(&info->philo_threads[i], NULL,
+				philosopher, &info->philos[i]) != 0)
 			break ;
 		i++;
 	}
@@ -120,7 +116,8 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	info.nr_fully_fed_philo = 0;
 	info.done = false;
-	info.start_time = get_time_in_ms();
+	info.start_delay = 1000;
+	info.start_time = get_time_in_ms() + info.start_delay;
 	if (!init_philos(&info))
 		return (EXIT_FAILURE);
 	if (!initialize_mutexes(&info))

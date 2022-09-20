@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 11:20:16 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/19 15:00:37 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/20 14:41:25 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ void	*philosopher(void *data)
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
+	while (philo->info->start_time > get_time_in_ms())
+		continue ;
 	if (philo->info->nr_philos == 1)
 		return (single_philo(philo), NULL);
 	else if (philo->index % 2 == 1)
