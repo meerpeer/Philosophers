@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:05:12 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/19 14:15:24 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/20 14:02:36 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef enum e_action
 struct s_philo
 {
 	t_info			*info;
-	pthread_t		thread;
+//	pthread_t		*thread;
 	pthread_mutex_t	philo_lock;
 	int				index;
 	long			time_last_meal;
@@ -48,6 +48,7 @@ struct s_philo
 struct s_info
 {
 	t_philo			*philos;
+	pthread_t		*philo_threads;
 	int				nr_philos;
 	long			time_to_die;
 	long			time_to_eat;

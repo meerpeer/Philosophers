@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/19 14:53:36 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/20 14:26:46 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,11 @@
 */
 void	stop(t_info *info, int i_threads)
 {
-	while (i_threads >= 0)
+	while (i_threads > 0)
 	{
 		i_threads--;
-		pthread_join(info->philos[i_threads].thread, NULL);
+		if (pthread_join(info->philo_threads[i_threads], NULL) != 0)
+			return ;
 	}
 	destroy_mutexes(info, info->nr_philos, info->nr_philos, true);
 	free_info_contents(info);
@@ -38,6 +39,7 @@ bool	has_one_died(t_info *info)
 	i = 0;
 	while (i < info->nr_philos && !info->done)
 	{
+		pthread_mutex_lock(&info->philos[i].philo_lock);
 		if (get_elapsed_time(info)
 			>= (info->philos[i].time_last_meal + info->time_to_die))
 		{
@@ -45,6 +47,7 @@ bool	has_one_died(t_info *info)
 			write_message(get_elapsed_time(info), DIE, info->philos[i].index);
 			return (true);
 		}
+		pthread_mutex_unlock(&info->philos[i].philo_lock);
 		i++;
 	}
 	return (false);
@@ -84,14 +87,26 @@ void	start(t_info *info)
 	int	i;
 
 	i = 0;
+	
+	info->philo_threads = malloc(sizeof(pthread_mutex_t) * info->nr_philos);
 	while (i < info->nr_philos)
 	{
-		pthread_create(&info->philos[i].thread, NULL,
-			philosopher, &info->philos[i]);
+		//remove this
+		// if (i==13)
+		// 	break ;
+		if(pthread_create(&info->philo_threads[i], NULL,
+			philosopher, &info->philos[i]) != 0)
+			break ;
 		i++;
 	}
 	if (i == info->nr_philos)
 		loop(info);
+	else
+	{
+		pthread_mutex_lock(&info->info_lock);
+		info->done = true;
+		pthread_mutex_unlock(&info->info_lock);
+	}
 	stop(info, i);
 }
 

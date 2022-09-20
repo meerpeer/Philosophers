@@ -1,7 +1,7 @@
 NAME = philo
-CFLAGS ?= -Wall -Wextra -Werror
-# -fsanitize=address -g
-# -fsanitizer=thread -g (for data races)
+CFLAGS ?= -Wall -Wextra -Werror -fsanitize=address -g 
+# -fsanitize=address -g 
+# -fsanitize=thread -g (for data races)
 CC = gcc
 
 HEADERFILES = include/philo.h
