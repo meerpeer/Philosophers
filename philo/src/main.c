@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/20 15:33:09 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/20 15:38:31 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,7 @@ void	stop(t_info *info, int i_threads)
 	while (i_threads > 0)
 	{
 		i_threads--;
-		printf("index = %i\n" , i_threads);
-		if (pthread_join(info->philo_threads[i_threads], NULL) != 0)
-			return ;
+		pthread_join(info->philo_threads[i_threads], NULL);
 	}
 	destroy_mutexes(info, info->nr_philos, info->nr_philos, true);
 	free_info_contents(info);
