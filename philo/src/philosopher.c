@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 11:20:16 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/20 15:29:07 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/23 13:38:36 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,13 @@ void	*philosopher(void *data)
 	while (true)
 	{
 		if (is_done(philo->info))
-			break;
+			break ;
 		if (!philo_eat(philo))
-			break;
+			break ;
 		if (!philo_sleep(philo))
-			break;
+			break ;
 		if (!philo_think(philo))
-			break;
+			break ;
 	}
 	return (NULL);
 }

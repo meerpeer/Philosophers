@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/19 13:51:52 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/20 15:25:19 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/23 13:36:30 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,22 +23,18 @@ void	take_forks(t_philo *philo)
 		start_grabbing_left = !start_grabbing_left;
 	if (start_grabbing_left)
 	{
-		printf("trying to grab fork left by %i\n", philo->index);
 		pthread_mutex_lock(&philo->info->forks[philo->fork_left]);
 		if (!is_done(philo->info))
 			write_message(get_elapsed_time(philo->info), TAKE_FORK, index);
-		printf("trying to grab fork right by %i\n", philo->index);
 		pthread_mutex_lock(&philo->info->forks[philo->fork_right]);
 		if (!is_done(philo->info))
 			write_message(get_elapsed_time(philo->info), TAKE_FORK, index);
 	}
 	else
 	{
-		printf("trying to grab fork right by %i\n", philo->index);
 		pthread_mutex_lock(&philo->info->forks[philo->fork_right]);
 		if (!is_done(philo->info))
 			write_message(get_elapsed_time(philo->info), TAKE_FORK, index);
-		printf("trying to grab fork left by %i\n", philo->index);
 		pthread_mutex_lock(&philo->info->forks[philo->fork_left]);
 		if (!is_done(philo->info))
 			write_message(get_elapsed_time(philo->info), TAKE_FORK, index);
@@ -51,7 +47,6 @@ void	drop_forks(t_philo *philo, bool left, bool right)
 		pthread_mutex_unlock(&philo->info->forks[philo->fork_left]);
 	if (right)
 		pthread_mutex_unlock(&philo->info->forks[philo->fork_right]);
-	printf("forks dropped by %i\n", philo->index);
 }
 
 bool	philo_think(t_philo *philo)

@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 11:34:54 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/20 15:39:36 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/23 13:37:51 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,6 @@ void	free_info_contents(t_info *info)
 		free (info->forks);
 	if (info->philos)
 		free(info->philos);
-
-	//free those philo threads too!
+	if (info->philo_threads)
+		free(info->philo_threads);
 }
