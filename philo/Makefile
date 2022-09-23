@@ -1,5 +1,5 @@
 NAME = philo
-CFLAGS ?= -Wall -Wextra -Werror -fsanitize=address -g 
+CFLAGS ?= -Wall -Wextra -Werror
 # -fsanitize=address -g 
 # -fsanitize=thread -g (for data races)
 CC = gcc
@@ -28,9 +28,5 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
-
-test:
-
-
 
 .PHONY: clean fclean re play

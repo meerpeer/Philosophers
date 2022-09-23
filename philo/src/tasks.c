@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/19 13:51:52 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/23 13:36:30 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/23 17:37:12 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,38 +15,20 @@
 void	take_forks(t_philo *philo)
 {
 	int		index;
-	bool	start_grabbing_left;
 
 	index = philo->index;
-	start_grabbing_left = (index % 2 == 1);
-	if (philo->info->nr_philos == philo->index)
-		start_grabbing_left = !start_grabbing_left;
-	if (start_grabbing_left)
-	{
-		pthread_mutex_lock(&philo->info->forks[philo->fork_left]);
-		if (!is_done(philo->info))
-			write_message(get_elapsed_time(philo->info), TAKE_FORK, index);
-		pthread_mutex_lock(&philo->info->forks[philo->fork_right]);
-		if (!is_done(philo->info))
-			write_message(get_elapsed_time(philo->info), TAKE_FORK, index);
-	}
-	else
-	{
-		pthread_mutex_lock(&philo->info->forks[philo->fork_right]);
-		if (!is_done(philo->info))
-			write_message(get_elapsed_time(philo->info), TAKE_FORK, index);
-		pthread_mutex_lock(&philo->info->forks[philo->fork_left]);
-		if (!is_done(philo->info))
-			write_message(get_elapsed_time(philo->info), TAKE_FORK, index);
-	}
+	pthread_mutex_lock(&philo->info->forks[philo->fork_left]);
+	if (!is_done(philo->info))
+		write_message(get_elapsed_time(philo->info), TAKE_FORK, index);
+	pthread_mutex_lock(&philo->info->forks[philo->fork_right]);
+	if (!is_done(philo->info))
+		write_message(get_elapsed_time(philo->info), TAKE_FORK, index);
 }
 
-void	drop_forks(t_philo *philo, bool left, bool right)
+void	drop_forks(t_philo *philo)
 {
-	if (left)
-		pthread_mutex_unlock(&philo->info->forks[philo->fork_left]);
-	if (right)
-		pthread_mutex_unlock(&philo->info->forks[philo->fork_right]);
+	pthread_mutex_unlock(&philo->info->forks[philo->fork_left]);
+	pthread_mutex_unlock(&philo->info->forks[philo->fork_right]);
 }
 
 bool	philo_think(t_philo *philo)
@@ -63,7 +45,7 @@ bool	philo_think(t_philo *philo)
 			- (wait_start - time_last_meal)
 			- philo->info->time_to_eat) / 2;
 	if (time_to_think > 1000)
-		time_to_think = 1000;
+		time_to_think = 500;
 	if (!wait_action(philo, THINK, time_to_think))
 		return (false);
 	return (true);
@@ -71,7 +53,13 @@ bool	philo_think(t_philo *philo)
 
 bool	philo_sleep(t_philo *philo)
 {
-	if (!wait_action(philo, SLEEP, philo->info->time_to_sleep))
+	if (philo->info->time_to_sleep == 0)
+	{
+		if (is_done(philo->info))
+			return (false);
+		write_message(get_elapsed_time(philo->info), SLEEP, philo->index);
+	}
+	else if (!wait_action(philo, SLEEP, philo->info->time_to_sleep))
 		return (false);
 	return (true);
 }
@@ -85,18 +73,18 @@ bool	philo_eat(t_philo *philo)
 	philo->time_last_meal = get_elapsed_time(philo->info);
 	pthread_mutex_unlock(&philo->philo_lock);
 	success = wait_action(philo, EAT, philo->info->time_to_eat);
-	drop_forks(philo, true, true);
-	pthread_mutex_lock(&philo->philo_lock);
+	drop_forks(philo);
 	if (success)
-		philo->nr_of_eats++;
-	if (philo->nr_of_eats == philo->info->nr_times_to_eat)
 	{
-		pthread_mutex_lock(&philo->info->info_lock);
-		philo->info->nr_fully_fed_philo++;
-		if (philo->info->nr_fully_fed_philo == philo->info->nr_philos)
-			philo->info->done = true;
-		pthread_mutex_unlock(&philo->info->info_lock);
+		pthread_mutex_lock(&philo->philo_lock);
+		philo->nr_of_eats++;
+		pthread_mutex_unlock(&philo->philo_lock);
+		if (philo->nr_of_eats == philo->info->nr_times_to_eat)
+		{
+			pthread_mutex_lock(&philo->info->info_lock);
+			philo->info->nr_fully_fed_philo++;
+			pthread_mutex_unlock(&philo->info->info_lock);
+		}
 	}
-	pthread_mutex_unlock(&philo->philo_lock);
 	return (success);
 }

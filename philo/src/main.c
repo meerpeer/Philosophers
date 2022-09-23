@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/23 13:38:17 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/23 17:39:37 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,17 @@ bool	has_one_died(t_info *info)
 	int	i;
 
 	i = 0;
-	while (i < info->nr_philos && !info->done)
+	while (i < info->nr_philos)
 	{
 		pthread_mutex_lock(&info->philos[i].philo_lock);
 		if (get_elapsed_time(info)
 			>= (info->philos[i].time_last_meal + info->time_to_die))
 		{
+			pthread_mutex_lock(&info->info_lock);
+			if (!info->done)
+				write_message(get_elapsed_time(info), DIE, info->philos[i].index);
 			info->done = true;
-			write_message(get_elapsed_time(info), DIE, info->philos[i].index);
+			pthread_mutex_unlock(&info->info_lock);
 			pthread_mutex_unlock(&info->philos[i].philo_lock);
 			return (true);
 		}
@@ -59,19 +62,16 @@ bool	has_one_died(t_info *info)
 */
 void	loop(t_info *info)
 {
-	bool	done;
-
-	done = has_one_died(info);
-	while (!done)
+	while (true)
 	{
+		if (has_one_died(info))
+			break ;
 		pthread_mutex_lock(&info->info_lock);
-		if (info->done)
-			done = true;
-		else
+		if (info->nr_fully_fed_philo == info->nr_philos)
 		{
-			done = has_one_died(info);
-			if (done)
-				info->done = true;
+			info->done = true;
+			pthread_mutex_unlock(&info->info_lock);
+			break ;
 		}
 		pthread_mutex_unlock(&info->info_lock);
 		usleep(250);
@@ -95,7 +95,7 @@ void	start(t_info *info)
 			break ;
 		i++;
 	}
-	if (i == info->nr_philos)
+	if (i == info->nr_philos && info->nr_times_to_eat != 0)
 		loop(info);
 	pthread_mutex_lock(&info->info_lock);
 	info->done = true;

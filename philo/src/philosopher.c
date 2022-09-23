@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 11:20:16 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/23 13:38:36 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/23 17:17:27 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ bool	is_done(t_info *info)
 {
 	bool	done;
 
+	if(info->time_to_die == 0)
+		return (true);
 	pthread_mutex_lock(&info->info_lock);
 	done = info->done;
 	pthread_mutex_unlock(&info->info_lock);
@@ -36,7 +38,7 @@ bool	wait_action(t_philo *philo, t_action ACTION, long wait_time)
 	{
 		if (is_done(philo->info))
 			return (false);
-		if (get_elapsed_time(philo->info) > wait_end)
+		if (get_elapsed_time(philo->info) >= wait_end)
 			return (true);
 		usleep(250);
 	}
