@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 10:14:53 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/23 16:20:45 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/26 16:49:23 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,15 @@ int	init_forks(t_info *info)
 
 static void	set_philo_fork_ids(t_philo *philo)
 {
-	int	left;
-	int	right;
-
-	left = philo->index - 1;
-	right = philo->index;
-	if (right >= philo->info->nr_philos)
-		right = 0;
-	philo->fork_left = left;
-	philo->fork_right = right;
+	philo->fork_first = philo->index - 1;
+	philo->fork_second = philo->index;
+	if (philo->info->nr_philos == 1)
+		philo->fork_second = 0;
+	if (philo->index % 2 == 0)
+	{
+		philo->fork_first = philo->index;
+		philo->fork_second =  philo->index - 1;
+	}
 }
 
 bool	init_philos(t_info *info)
@@ -82,6 +82,7 @@ bool	initialize_mutexes(t_info *info)
 	int		nr_philo_locks;
 	bool	completed;
 
+// TO DO init mutex for 
 	nr_forks = 0;
 	nr_philo_locks = 0;
 	completed = true;

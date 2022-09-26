@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/19 13:51:52 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/23 17:37:12 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/26 16:43:40 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,18 @@ void	take_forks(t_philo *philo)
 	int		index;
 
 	index = philo->index;
-	pthread_mutex_lock(&philo->info->forks[philo->fork_left]);
+	pthread_mutex_lock(&philo->info->forks[philo->fork_first]);
 	if (!is_done(philo->info))
-		write_message(get_elapsed_time(philo->info), TAKE_FORK, index);
-	pthread_mutex_lock(&philo->info->forks[philo->fork_right]);
+		write_message(philo->info, TAKE_FORK, index);
+	pthread_mutex_lock(&philo->info->forks[philo->fork_second]);
 	if (!is_done(philo->info))
 		write_message(get_elapsed_time(philo->info), TAKE_FORK, index);
 }
 
 void	drop_forks(t_philo *philo)
 {
-	pthread_mutex_unlock(&philo->info->forks[philo->fork_left]);
-	pthread_mutex_unlock(&philo->info->forks[philo->fork_right]);
+	pthread_mutex_unlock(&philo->info->forks[philo->fork_first]);
+	pthread_mutex_unlock(&philo->info->forks[philo->fork_second]);
 }
 
 bool	philo_think(t_philo *philo)
@@ -46,6 +46,8 @@ bool	philo_think(t_philo *philo)
 			- philo->info->time_to_eat) / 2;
 	if (time_to_think > 1000)
 		time_to_think = 500;
+	if (time_to_think < 0)
+		time_to_think = 0;
 	if (!wait_action(philo, THINK, time_to_think))
 		return (false);
 	return (true);
@@ -57,7 +59,7 @@ bool	philo_sleep(t_philo *philo)
 	{
 		if (is_done(philo->info))
 			return (false);
-		write_message(get_elapsed_time(philo->info), SLEEP, philo->index);
+		write_message(philo->info, SLEEP, philo->index);
 	}
 	else if (!wait_action(philo, SLEEP, philo->info->time_to_sleep))
 		return (false);

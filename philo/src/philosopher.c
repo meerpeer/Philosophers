@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 11:20:16 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/26 10:32:41 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/26 16:43:22 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ bool	wait_action(t_philo *philo, t_action ACTION, long wait_time)
 	if (is_done(philo->info))
 		return (false);
 	wait_end = wait_start + wait_time;
-	write_message(get_elapsed_time(philo->info), ACTION, philo->index);
+	write_message(philo->info, ACTION, philo->index);
 	while (true)
 	{
 		if (is_done(philo->info))
@@ -46,14 +46,14 @@ bool	wait_action(t_philo *philo, t_action ACTION, long wait_time)
 
 void	single_philo(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->info->forks[philo->fork_left]);
+	pthread_mutex_lock(&philo->info->forks[philo->fork_first]);
 	if (!is_done(philo->info) && philo->info->time_to_die != 0)
-		write_message(get_elapsed_time(philo->info), TAKE_FORK, 1);
+		write_message(philo->info, TAKE_FORK, 1);
 	while (true)
 	{
 		if (is_done(philo->info))
 		{
-			pthread_mutex_unlock(&philo->info->forks[philo->fork_left]);
+			pthread_mutex_unlock(&philo->info->forks[philo->fork_first]);
 			return ;
 		}
 		usleep (250);

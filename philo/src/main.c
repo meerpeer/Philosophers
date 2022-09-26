@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/26 10:31:04 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/26 16:42:58 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ bool	has_one_died(t_info *info)
 		{
 			pthread_mutex_lock(&info->info_lock);
 			if (!info->done)
-				write_message(get_elapsed_time(info), DIE,
+				write_message(info, DIE,
 					info->philos[i].index);
 			info->done = true;
 			pthread_mutex_unlock(&info->info_lock);

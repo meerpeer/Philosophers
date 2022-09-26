@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:05:12 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/23 17:11:15 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/26 16:48:16 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ struct s_philo
 	int				index;
 	long			time_last_meal;
 	int				nr_of_eats;
-	int				fork_left;
-	int				fork_right;
+	int				fork_first;
+	int				fork_second;
 };
 
 struct s_info
@@ -57,6 +57,7 @@ struct s_info
 	long			start_time;
 	long			start_delay;
 	bool			done;
+	pthread_mutex_t	write_lock;
 	pthread_mutex_t	info_lock;
 	pthread_mutex_t	*forks;
 };
@@ -73,7 +74,7 @@ bool	destroy_mutexes(t_info *info, int fork_mutexes, int philo_mutexes,
 
 long	get_time_in_ms(void);
 long	get_elapsed_time(t_info *info);
-void	write_message(int current_time, t_action action, int index);
+void	write_message(t_info *info, t_action action, int index);
 
 void	*philosopher(void *data);
 bool	philo_eat(t_philo *philo);
