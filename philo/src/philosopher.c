@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 11:20:16 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/23 17:17:27 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/26 10:32:41 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool	is_done(t_info *info)
 {
 	bool	done;
 
-	if(info->time_to_die == 0)
+	if (info->time_to_die == 0)
 		return (true);
 	pthread_mutex_lock(&info->info_lock);
 	done = info->done;

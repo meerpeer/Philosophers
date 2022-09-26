@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 15:10:52 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/23 17:42:48 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/26 10:31:28 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ bool	parse_input_to_info(int argc, char **argv, t_info *info)
 	if (argc == 6)
 		info->nr_times_to_eat = parse_arg_to_long(argv[5], INT_MAX);
 	if (info->nr_philos <= 0 || info->time_to_die < 0 || info->time_to_eat < 0
-		|| info->time_to_sleep < 0 
+		|| info->time_to_sleep < 0
 		|| (argc == 6 && info->nr_times_to_eat < 0))
 		return (false);
 	return (true);
