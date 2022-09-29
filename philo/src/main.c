@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/29 14:08:10 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/29 14:14:58 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	start(t_info *info)
 
 	i = 0;
 	info->philo_threads = malloc(sizeof(pthread_mutex_t) * info->nr_philos);
-	while (i < info->nr_philos)
+	while (info->philo_threads && i < info->nr_philos)
 	{
 		if (pthread_create(&info->philo_threads[i], NULL,
 				philosopher, &info->philos[i]) != 0)
