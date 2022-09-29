@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 11:34:54 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/23 14:17:42 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/29 13:13:43 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ bool	destroy_forks(t_info *info, int n)
 }
 
 bool	destroy_mutexes(t_info *info, int fork_mutexes, int philo_mutexes,
-	bool info_lock_created)
+	bool info_locks_created)
 {
 	bool	completed;
 
@@ -50,9 +50,11 @@ bool	destroy_mutexes(t_info *info, int fork_mutexes, int philo_mutexes,
 		completed = false;
 	if (!destroy_philo_mutexes(info, philo_mutexes))
 		completed = false;
-	if (info_lock_created)
+	if (info_locks_created)
 	{
 		if (pthread_mutex_destroy(&info->info_lock) != 0)
+			completed = false;
+		if (pthread_mutex_destroy(&info->write_lock) != 0)
 			completed = false;
 	}
 	return (completed);

@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:05:12 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/26 16:48:16 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/29 13:08:28 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ bool	destroy_mutexes(t_info *info, int fork_mutexes, int philo_mutexes,
 
 long	get_time_in_ms(void);
 long	get_elapsed_time(t_info *info);
-void	write_message(t_info *info, t_action action, int index);
+bool	try_write_message(t_info *info, t_action action, int index);
 
 void	*philosopher(void *data);
 bool	philo_eat(t_philo *philo);

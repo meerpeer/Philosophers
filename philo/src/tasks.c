@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/19 13:51:52 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/26 16:43:40 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/29 14:08:39 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,9 @@ void	take_forks(t_philo *philo)
 
 	index = philo->index;
 	pthread_mutex_lock(&philo->info->forks[philo->fork_first]);
-	if (!is_done(philo->info))
-		write_message(philo->info, TAKE_FORK, index);
+	try_write_message(philo->info, TAKE_FORK, index);
 	pthread_mutex_lock(&philo->info->forks[philo->fork_second]);
-	if (!is_done(philo->info))
-		write_message(get_elapsed_time(philo->info), TAKE_FORK, index);
+	try_write_message(philo->info, TAKE_FORK, index);
 }
 
 void	drop_forks(t_philo *philo)
@@ -57,9 +55,8 @@ bool	philo_sleep(t_philo *philo)
 {
 	if (philo->info->time_to_sleep == 0)
 	{
-		if (is_done(philo->info))
+		if (!try_write_message(philo->info, SLEEP, philo->index))
 			return (false);
-		write_message(philo->info, SLEEP, philo->index);
 	}
 	else if (!wait_action(philo, SLEEP, philo->info->time_to_sleep))
 		return (false);
@@ -69,6 +66,7 @@ bool	philo_sleep(t_philo *philo)
 bool	philo_eat(t_philo *philo)
 {
 	bool	success;
+	int		nr_times_eaten;
 
 	take_forks(philo);
 	pthread_mutex_lock(&philo->philo_lock);
@@ -80,8 +78,9 @@ bool	philo_eat(t_philo *philo)
 	{
 		pthread_mutex_lock(&philo->philo_lock);
 		philo->nr_of_eats++;
+		nr_times_eaten = philo->nr_of_eats;
 		pthread_mutex_unlock(&philo->philo_lock);
-		if (philo->nr_of_eats == philo->info->nr_times_to_eat)
+		if (nr_times_eaten == philo->info->nr_times_to_eat)
 		{
 			pthread_mutex_lock(&philo->info->info_lock);
 			philo->info->nr_fully_fed_philo++;

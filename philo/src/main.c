@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/06 17:03:08 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/26 16:42:58 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/29 14:08:10 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,9 @@ bool	has_one_died(t_info *info)
 			>= (info->philos[i].time_last_meal + info->time_to_die))
 		{
 			pthread_mutex_lock(&info->info_lock);
-			if (!info->done)
-				write_message(info, DIE,
-					info->philos[i].index);
 			info->done = true;
 			pthread_mutex_unlock(&info->info_lock);
+			try_write_message(info, DIE, info->philos[i].index);
 			pthread_mutex_unlock(&info->philos[i].philo_lock);
 			return (true);
 		}

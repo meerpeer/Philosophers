@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 10:14:53 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/26 16:49:23 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/29 14:10:02 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	set_philo_fork_ids(t_philo *philo)
 	if (philo->index % 2 == 0)
 	{
 		philo->fork_first = philo->index;
-		philo->fork_second =  philo->index - 1;
+		philo->fork_second = philo->index - 1;
 	}
 }
 
@@ -82,22 +82,21 @@ bool	initialize_mutexes(t_info *info)
 	int		nr_philo_locks;
 	bool	completed;
 
-// TO DO init mutex for 
 	nr_forks = 0;
 	nr_philo_locks = 0;
 	completed = true;
 	if (!info)
 		return (false);
 	nr_forks = init_forks(info);
-	if (nr_forks < info->nr_philos)
+	nr_philo_locks = init_philos_mutexes(info);
+	if (nr_forks < info->nr_philos || nr_philo_locks < info->nr_philos)
 		completed = false;
-	else
+	if (pthread_mutex_init(&info->info_lock, 0) != 0)
+		completed = false;
+	else if (pthread_mutex_init(&info->write_lock, 0) != 0)
 	{
-		nr_philo_locks = init_philos_mutexes(info);
-		if (nr_philo_locks < info->nr_philos)
-			completed = false;
-		if (pthread_mutex_init(&info->info_lock, 0) != 0)
-			completed = false;
+		completed = false;
+		pthread_mutex_destroy(&info->info_lock);
 	}
 	if (completed)
 		return (true);
