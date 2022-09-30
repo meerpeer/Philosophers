@@ -6,7 +6,7 @@
 /*   By: mevan-de <mevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/12 10:14:53 by mevan-de      #+#    #+#                 */
-/*   Updated: 2022/09/29 14:10:02 by mevan-de      ########   odam.nl         */
+/*   Updated: 2022/09/30 12:35:19 by mevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ int	init_forks(t_info *info)
 static void	set_philo_fork_ids(t_philo *philo)
 {
 	philo->fork_first = philo->index - 1;
-	philo->fork_second = philo->index;
+	philo->fork_second = philo->index % (philo->info->nr_philos + 1);
 	if (philo->info->nr_philos == 1)
 		philo->fork_second = 0;
 	if (philo->index % 2 == 0)
 	{
-		philo->fork_first = philo->index;
+		philo->fork_first = philo->index % (philo->info->nr_philos + 1);
 		philo->fork_second = philo->index - 1;
 	}
 }
