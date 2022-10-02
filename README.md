@@ -5,11 +5,8 @@ Eat, Sleep, Spaghetti, repeat. This project is about learning how threads work b
 A variation on the [philosophers dining problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem).
 
 
-
-
- **Allowed external functions**:
  
-This is a school project and we were given limits on what we could use to create the program:
+This is a school project and we were given limits on the **allowed external functions**:
 
  memset, printf, malloc, free, write,
 usleep, gettimeofday, pthread_create,
