@@ -15,14 +15,24 @@ This is a school project and we were given limits on what we could use to create
 - malloc
 - free
 - write
+- usleep
+- gettimeofday
+- pthread_create
+- pthread_detach
+- pthread_join
+- pthread_mutex_init
+- pthread_mutex_destroy
+- pthread_mutex_lock
+- pthread_mutex_unlock
 
-usleep, gettimeofday, pthread_create,
-
-pthread_detach, pthread_join, pthread_mutex_init,
-
-pthread_mutex_destroy, pthread_mutex_lock,
-
-pthread_mutex_unlock
-
-## 
+## How to Test
+To create the executable:
+```sh
+cd philo
+make
+```
+To run the program:
+```sh
+./philo [Number of philosophers] [time to die] [time to eat] [time to sleep] Optional: [Number of times each philosopher must eat]
+```
 
