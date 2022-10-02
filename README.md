@@ -10,7 +10,11 @@ A variation on the [philosophers dining problem](https://en.wikipedia.org/wiki/D
  **Allowed external functions**:
  
 This is a school project and we were given limits on what we could use to create the program:
-memset, printf, malloc, free, write,
+- memset
+- printf 
+- malloc
+- free
+- write
 
 usleep, gettimeofday, pthread_create,
 
