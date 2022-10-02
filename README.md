@@ -2,7 +2,7 @@
 42 project to learn the basics of threads.
 
 Eat, Sleep, Spaghetti, repeat. This project is about learning how threads work by precisely timing a group of philosophers on when to pick up forks and eat spaghetti without dying from hunger.
-A variation on the [philosophers dining problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem). This is a school project and we were given some additional limits, like the philosophers not being able to communicate and a limited set of allowed external functions.
+A variation on the [philosophers dining problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem). This is a school project and we were given some additional limits, e.g. the philosophers can't communicate with each other and the limited set of allowed external functions.
 
 
  
