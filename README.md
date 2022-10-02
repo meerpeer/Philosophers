@@ -2,11 +2,11 @@
 42 project to learn the basics of threads.
 
 Eat, Sleep, Spaghetti, repeat. This project is about learning how threads work by precisely timing a group of philosophers on when to pick up forks and eat spaghetti without dying from hunger.
-A variation on the [philosophers dining problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem).
+A variation on the [philosophers dining problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem). This is a school project and we were given some additional limits, like the philosophers not being able to communicate and a limited set of allowed external functions.
 
 
  
-This is a school project and we were given limits on the **allowed external functions**:
+**Allowed external functions**:
 
  memset, printf, malloc, free, write,
 usleep, gettimeofday, pthread_create,
